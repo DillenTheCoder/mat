@@ -229,7 +229,7 @@
       const container = document.getElementById('membersList');
 
       try {
-        const res = await fetch('http://localhost:3000/members');
+        const res = await fetch('https://spotty-teeth-matter.loca.lt/members');
         const data = await res.json();
 
         if (data.success && data.members.length > 0) {
@@ -303,7 +303,7 @@
       if (!confirmed) return;
 
       try {
-        const res = await fetch(`http://192.168.0.36:3000/${action}-member`, {
+        const res = await fetch(`http://102.66.144.248:3000/${action}-member`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id })

@@ -14,7 +14,7 @@ form.addEventListener('submit', async (e) => {
   };
 
   try {
-    const res = await fetch('http://192.168.0.36:3000/signup', {
+    const res = await fetch('https://spotty-teeth-matter.loca.lt/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
