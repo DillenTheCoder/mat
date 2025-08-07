@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Members</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem 0;
+      text-align: center;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-container {
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-input {
+      width: 100%;
+      max-width: 500px;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .search-input:focus {
+      border-color: #2c3e50;
+      box-shadow: #19232d;;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      min-width: 800px;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background-color: #2c3e50;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .no-members {
+      text-align: center;
+      margin-top: 2rem;
+      font-weight: bold;
+      color: #888;
+    }
+
+    button.menu-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 0.5rem;
+    }
+
+    .menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      border-radius: 6px;
+      min-width: 120px;
+    }
+
+    .menu button {
+      background: none;
+      border: none;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .links a {
+      color: #2c3e50;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .links a:hover {
+      color: #2c3e50;
+    }
+
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+      }
+
+      .menu button {
+        font-size: 0.85rem;
+      }
+    }
+    footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1.5rem 1rem;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ddd;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.6rem 1rem;
+  border: 2px solid #2c3e50;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+  background-color: #2c3e50;
+  color: white;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MEMBERSHIP APP</h1>
+  </header>
+
+  <main>
+    <h2>Registered Members</h2>
+    <div class="search-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search members...">
+    </div>
+    <div class="table-container">
+      <div id="membersList"></div>
+    </div>
+  </main>
+
+  <footer>
+  <div class="nav-links">
+    <a href="verify.html">🔍 Verify Membership</a>
+    <a href="members.html">📋 Add New Member</a>
+  </div>
+</footer>
+
+
+  <script>
+    async function loadMembers() {
+      const container = document.getElementById('membersList');
+
+      try {
+        const res = await fetch('https://dillenthecoder.github.io/mat/members');
+        const data = await res.json();
+
+        if (data.success && data.members.length > 0) {
+          const table = document.createElement('table');
+          table.innerHTML = `
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.members.map(m => `
+                <tr>
+                  <td>${m.name}</td>
+                  <td>${m.surname}</td>
+                  <td>${m.phone}</td>
+                  <td>${m.email}</td>
+                  <td>${m.idNumber}</td>
+                  <td>${m.status || 'active'}</td>
+                  <td>
+                    <div style="position: relative;">
+                      <button class="menu-btn" onclick="toggleMenu('${m._id}')">⋮</button>
+                      <div id="menu-${m._id}" class="menu">
+                        <button onclick="performAction('${m._id}', 'flag')">🚩 Flag</button>
+                        <button onclick="performAction('${m._id}', 'ban')">🔨 Ban</button>
+                        <button onclick="performAction('${m._id}', 'delete')">❌ Delete</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          `;
+          container.appendChild(table);
+
+          const searchInput = document.getElementById('searchInput');
+          searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+              const text = row.textContent.toLowerCase();
+              row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+          });
+        } else {
+          container.innerHTML = `<p class="no-members">No members found.</p>`;
+        }
+      } catch (err) {
+        console.error('Failed to load members:', err);
+        container.innerHTML = `<p class="no-members">Error loading members.</p>`;
+      }
+    }
+
+    loadMembers();
+
+    function toggleMenu(id) {
+      document.querySelectorAll('.menu').forEach(menu => menu.style.display = 'none');
+      const menu = document.getElementById(`menu-${id}`);
+      if (menu) menu.style.display = 'block';
+    }
+
+    async function performAction(id, action) {
+      const confirmed = confirm(`Are you sure you want to ${action} this member?`);
+      if (!confirmed) return;
+
+      try {
+        const res = await fetch(`http://102.66.144.248:3000/${action}-member`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          alert(`${action.toUpperCase()} successful`);
+          location.reload();
+        } else {
+          alert('Action failed');
+        }
+      } catch (err) {
+        alert('Server error');
+      }
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.menu') && !e.target.closest('.menu-btn')) {
+        document.querySelectorAll('.menu').forEach(menu => menu.style.display = 'none');
+      }
+    });
+  </script>
+</body>
+</html>
